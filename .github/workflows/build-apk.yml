@@ -24,12 +24,20 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.1.0'
-      - name: Build v0.4.2 Roxy PNG fix
+      - name: Build v0.4.2 Roxy asset repair
         run: gradle --no-daemon :app:assembleDebug
-      - name: Verify generated Roxy PNG
+      - name: Verify reconstructed Roxy JPEG
         run: |
-          test -s app/src/main/res/drawable-nodpi/roxy_wallpaper.png
-          file app/src/main/res/drawable-nodpi/roxy_wallpaper.png
+          test -s app/src/main/res/drawable-nodpi/roxy_wallpaper.jpg
+          file app/src/main/res/drawable-nodpi/roxy_wallpaper.jpg
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('app/src/main/res/drawable-nodpi/roxy_wallpaper.jpg')
+          b = p.read_bytes()
+          assert b[:2] == b'\xff\xd8', 'missing JPEG SOI marker'
+          assert b[-2:] == b'\xff\xd9', 'missing JPEG EOI marker'
+          print(f'Roxy JPEG verified: {len(b)} bytes')
+          PY
       - name: Rename v0.4.2 Roxy APK
         run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.2-RoxyFix-debug.apk
       - name: Upload v0.4.2 Roxy APK
