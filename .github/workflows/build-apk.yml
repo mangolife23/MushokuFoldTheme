@@ -24,9 +24,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.1.0'
-      - name: Build v0.4.2 Roxy asset repair
-        run: gradle --no-daemon :app:assembleDebug
-      - name: Verify reconstructed Roxy JPEG
+      - name: Verify bundled Roxy JPEG
         run: |
           test -s app/src/main/res/drawable-nodpi/roxy_wallpaper.jpg
           file app/src/main/res/drawable-nodpi/roxy_wallpaper.jpg
@@ -36,12 +34,14 @@ jobs:
           b = p.read_bytes()
           assert b[:2] == b'\xff\xd8', 'missing JPEG SOI marker'
           assert b[-2:] == b'\xff\xd9', 'missing JPEG EOI marker'
-          print(f'Roxy JPEG verified: {len(b)} bytes')
+          print(f'Bundled Roxy JPEG verified: {len(b)} bytes')
           PY
-      - name: Rename v0.4.2 Roxy APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.2-RoxyFix-debug.apk
-      - name: Upload v0.4.2 Roxy APK
+      - name: Build v0.4.3 Roxy direct-resource repair
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.3-RoxyRepair-debug.apk
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MushokuFoldTheme-v0.4.2-RoxyFix
-          path: app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.2-RoxyFix-debug.apk
+          name: MushokuFoldTheme-v0.4.3-RoxyRepair
+          path: app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.3-RoxyRepair-debug.apk

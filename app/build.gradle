@@ -10,8 +10,8 @@ android {
         applicationId 'com.otakuhoarder.mushokufoldtheme'
         minSdk 28
         targetSdk 36
-        versionCode 8
-        versionName '0.4.2'
+        versionCode 9
+        versionName '0.4.3'
     }
 
     buildTypes {
@@ -20,41 +20,4 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-// Rebuild the verified Roxy JPEG from text-safe Base64 before Android compiles.
-// This avoids the corrupted binary JPEG that previously caused black previews
-// and the ImageIO "Bogus marker length" build failure.
-tasks.register('prepareRoxyWallpaper') {
-    doLast {
-        File input = file('src/main/assets/roxy_q25.txt')
-        File outputDir = file('src/main/res/drawable-nodpi')
-        File output = new File(outputDir, 'roxy_wallpaper.jpg')
-
-        if (!input.exists()) {
-            throw new GradleException('Missing clean Roxy Base64 asset: ' + input)
-        }
-
-        String encoded = input.getText('UTF-8').replaceAll('\\s', '')
-        byte[] decoded
-        try {
-            decoded = java.util.Base64.getDecoder().decode(encoded)
-        } catch (IllegalArgumentException e) {
-            throw new GradleException('Roxy Base64 asset is invalid', e)
-        }
-
-        if (decoded.length < 4 ||
-                (decoded[0] & 0xFF) != 0xFF || (decoded[1] & 0xFF) != 0xD8 ||
-                (decoded[decoded.length - 2] & 0xFF) != 0xFF || (decoded[decoded.length - 1] & 0xFF) != 0xD9) {
-            throw new GradleException('Decoded Roxy asset is not a complete JPEG')
-        }
-
-        outputDir.mkdirs()
-        output.bytes = decoded
-        println "Generated ${output} (${decoded.length} bytes, JPEG markers verified)"
-    }
-}
-
-tasks.named('preBuild').configure {
-    dependsOn tasks.named('prepareRoxyWallpaper')
 }
