@@ -24,12 +24,16 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.1.0'
-      - name: Build debug APK
+      - name: Build v0.4.2 Roxy PNG fix
         run: gradle --no-daemon :app:assembleDebug
-      - name: Rename v0.4.1 Roxy APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.1-Roxy-debug.apk
-      - name: Upload v0.4.1 Roxy APK
+      - name: Verify generated Roxy PNG
+        run: |
+          test -s app/src/main/res/drawable-nodpi/roxy_wallpaper.png
+          file app/src/main/res/drawable-nodpi/roxy_wallpaper.png
+      - name: Rename v0.4.2 Roxy APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.2-RoxyFix-debug.apk
+      - name: Upload v0.4.2 Roxy APK
         uses: actions/upload-artifact@v4
         with:
-          name: MushokuFoldTheme-v0.4.1-Roxy
-          path: app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.1-Roxy-debug.apk
+          name: MushokuFoldTheme-v0.4.2-RoxyFix
+          path: app/build/outputs/apk/debug/MushokuFoldTheme-v0.4.2-RoxyFix-debug.apk
