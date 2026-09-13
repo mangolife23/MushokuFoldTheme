@@ -3,12 +3,16 @@ package com.otakuhoarder.mushokufoldtheme;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Shader;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.drawable.GradientDrawable;
 
 import java.io.IOException;
 
@@ -123,7 +126,7 @@ public class MainActivity extends Activity {
         root.addView(apply, applyLp);
         apply.setOnClickListener(v -> applyWallpaper());
 
-        TextView note = text("v0.2 • Character-inspired palettes • Fold-aware preview • Artwork slots ready", 12, Color.rgb(112, 119, 129), Gravity.CENTER);
+        TextView note = text("v0.3 • Generated character-art integration scaffold • Fold-aware preview", 12, Color.rgb(112, 119, 129), Gravity.CENTER);
         note.setPadding(dp(8), dp(18), dp(8), 0);
         root.addView(note, fullWidth(ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -285,7 +288,7 @@ public class MainActivity extends Activity {
             canvas.drawText(theme.tagline, dp(24), h - dp(48), p);
             p.setTextSize(dp(12));
             p.setColor(Color.argb(180, 255, 245, 225));
-            canvas.drawText(w > dp(500) ? "UNFOLDED • ADAPTIVE DESK" : "COVER • CHARACTER MODE", dp(24), h - dp(22), p);
+            canvas.drawText(w > dp(500) ? "UNFOLDED • ARTWORK MODE" : "COVER • ARTWORK MODE", dp(24), h - dp(22), p);
         }
     }
 
